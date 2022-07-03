@@ -1,0 +1,29 @@
+version: '3'
+
+services: 
+  app: 
+    build: .
+    command: npm start
+    networks:
+      - rede_nova
+    ports: 
+      - '3001:3001'
+    volumes: 
+      - .:/usr/app
+      - /usr/src/app/node_modules
+
+  db:
+    container_name: 'database'
+    image: mysql:8.0.21
+    command: --default-authentication-plugin=mysql_native_password --sql_mode=NO_ENGINE_SUBSTITUTION,NO_AUTO_CREATE_USER --explicit_defaults_for_timestamp
+    restart: always
+    ports: 
+      - '3308:3306'
+      - 3306:3306
+      - 33060:33060
+    environment: 
+      - MYSQL_ROOT_PASSWORD=password
+      - TZ=America/Sao_Paulo
+networks:
+ rede_nova:
+   driver: bridge
